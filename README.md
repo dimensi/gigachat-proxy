@@ -17,7 +17,7 @@ Works with: Raycast AI, Cursor, Aider, Claude Code, LangChain, OpenAI SDK, and a
 ## Quick start
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/dimensi/gigachat-proxy/main/setup.sh | bash
+curl -fsSL https://dimensi.github.io/gigachat-proxy/setup.sh | bash
 ```
 
 The script will:
