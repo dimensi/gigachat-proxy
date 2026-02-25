@@ -1,0 +1,19 @@
+services:
+  gpt2giga:
+    image: ghcr.io/ai-forever/gpt2giga:latest
+    ports:
+      - "127.0.0.1:8090:8090"
+    env_file:
+      - .env
+    environment:
+      # Прокси
+      GPT2GIGA_HOST: "0.0.0.0"
+      GPT2GIGA_PORT: "8090"
+      GPT2GIGA_MODE: "DEV"
+      GPT2GIGA_LOG_LEVEL: "INFO"
+
+      # GigaChat
+      GIGACHAT_SCOPE: "GIGACHAT_API_PERS"
+      GIGACHAT_VERIFY_SSL_CERTS: "False"
+      GIGACHAT_TIMEOUT: "60"
+    restart: unless-stopped
