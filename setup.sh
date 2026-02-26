@@ -278,14 +278,6 @@ print_summary() {
 
 # ─── MAIN ─────────────────────────────────────
 
-# Переподключаем stdin к терминалу — иначе read читает из pipe при curl | bash
-if [ -t 0 ]; then
-  : # stdin уже терминал (запуск из файла)
-elif [ -e /dev/tty ]; then
-  exec </dev/tty
-else
-  err "Запустите скрипт так: bash <(curl -fsSL https://gigachat.dimensi.dev/setup.sh)"
-fi
 
 DOCKER_CMD="docker"
 COMPOSE_CMD="docker compose"
