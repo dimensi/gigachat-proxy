@@ -72,7 +72,7 @@ ensure_deps() {
   fi
 
   # systemctl (только Linux)
-  if [ "$(uname -s)" = "Linux" ] && ! command -v systemctl &>/dev/null; then
+  if [ "$(uname -s)" = "Linux" ] && ! command -v systemctl &>/dev/null && ! command -v docker &>/dev/null; then
     warn "systemctl не найден. Docker daemon нужно будет запустить вручную после установки."
   fi
 }
@@ -101,8 +101,8 @@ install_docker_linux() {
     ${SUDO_CMD} usermod -aG docker "$USER"
     warn "Вы добавлены в группу 'docker'. Для применения без sudo нужно перелогиниться."
     warn "Сейчас продолжаем с sudo..."
-    DOCKER_CMD="sudo docker"
-    COMPOSE_CMD="sudo docker compose"
+    DOCKER_CMD="${SUDO_CMD} docker"
+    COMPOSE_CMD="${SUDO_CMD} docker compose"
   fi
 }
 
@@ -331,7 +331,6 @@ print_summary() {
 
 DOCKER_CMD="docker"
 COMPOSE_CMD="docker compose"
-SUDO_CMD="sudo"
 
 echo -e "${BOLD}${CYAN}"
 echo "  ██████╗ ██╗ ██████╗  █████╗  ██████╗██╗  ██╗ █████╗ ████████╗"
