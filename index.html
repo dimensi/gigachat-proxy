@@ -87,7 +87,7 @@
         <!-- команда -->
         <div class="flex items-center justify-between gap-4 px-6 py-5">
           <code class="font-mono text-sm md:text-base text-slate-300 text-left overflow-x-auto whitespace-nowrap terminal-line select-all">
-            curl -fsSL https://dimensi.github.io/gigachat-proxy/setup.sh | bash
+            curl -fsSL https://gigachat.dimensi.dev/setup.sh | bash
           </code>
           <button id="copyBtn"
             onclick="copyCommand()"
@@ -307,7 +307,7 @@
   <script>
     // Кнопка копирования
     function copyCommand() {
-      const cmd = 'curl -fsSL https://dimensi.github.io/gigachat-proxy/setup.sh | bash';
+      const cmd = 'curl -fsSL https://gigachat.dimensi.dev/setup.sh | bash';
       navigator.clipboard.writeText(cmd).then(() => {
         const btn = document.getElementById('copyBtn');
         const text = document.getElementById('copyText');

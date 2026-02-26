@@ -17,7 +17,7 @@ OpenAI-совместимый прокси для [GigaChat](https://developers.
 ## Быстрый старт
 
 ```bash
-curl -fsSL https://dimensi.github.io/gigachat-proxy/setup.sh | bash
+curl -fsSL https://gigachat.dimensi.dev/setup.sh | bash
 ```
 
 Скрипт выполнит следующее:
