@@ -133,7 +133,7 @@ EOF
   cat > "$INSTALL_DIR/docker-compose.yml" <<'EOF'
 services:
   gpt2giga:
-    image: ghcr.io/ai-forever/gpt2giga:latest
+    image: gigateam/gpt2giga:latest
     ports:
       - "127.0.0.1:8090:8090"
     env_file:
