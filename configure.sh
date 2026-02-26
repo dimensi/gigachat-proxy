@@ -77,3 +77,65 @@ get_context_window() {
     *)                                         echo "32768" ;;
   esac
 }
+
+# ─── Меню ──────────────────────────────────
+show_menu() {
+  echo ""
+  echo -e "${BOLD}Выберите инструменты для настройки:${RESET}"
+  echo ""
+  echo "  [1] Cursor"
+  echo "  [2] Raycast AI  (только macOS)"
+  echo "  [3] Zed"
+  echo "  [4] Aider"
+  echo "  [5] Claude Code"
+  echo "  [6] OpenClaw"
+  echo ""
+  echo -e "  [a] Все инструменты"
+  echo ""
+  printf "Введите номера через пробел (например: 1 3 5) или 'a': "
+  read -r CHOICE </dev/tty
+}
+
+dispatch() {
+  local choice="$1"
+  local models="$2"
+
+  if [ "$choice" = "a" ]; then
+    choice="1 2 3 4 5 6"
+  fi
+
+  for num in $choice; do
+    case "$num" in
+      1) show_cursor ;;
+      2) show_raycast "$models" ;;
+      3) show_zed "$models" ;;
+      4) show_aider ;;
+      5) show_claude_code ;;
+      6) show_openclaw "$models" ;;
+      *) warn "Неизвестный номер: $num — пропускаем" ;;
+    esac
+  done
+}
+
+# ─── Stubs (заменяются в Task 3–4) ──────────
+show_cursor()     { echo "cursor"; }
+show_raycast()    { echo "raycast"; }
+show_zed()        { echo "zed"; }
+show_aider()      { echo "aider"; }
+show_claude_code(){ echo "claude"; }
+show_openclaw()   { echo "openclaw"; }
+
+# ─── MAIN ──────────────────────────────────
+echo -e "${BOLD}${CYAN}"
+echo "  GigaChat Proxy — настройка инструментов"
+echo -e "${RESET}"
+
+check_proxy
+MODELS=$(fetch_models)
+ok "Модели: ${MODELS}"
+
+show_menu
+dispatch "$CHOICE" "$MODELS"
+
+echo ""
+ok "Готово!"
