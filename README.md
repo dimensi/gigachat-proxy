@@ -74,6 +74,7 @@ python3 test.py
 |---|---|---|
 | `GIGACHAT_SCOPE` | `GIGACHAT_API_PERS` | Тип доступа (`GIGACHAT_API_PERS` — физлицо, `GIGACHAT_API_CORP` — юрлицо) |
 | `GPT2GIGA_MODE` | `DEV` | `DEV` включает `/docs` и эндпоинты логов; `PROD` отключает |
+| `GPT2GIGA_PASS_MODEL` | `true` | Передавать модель из запроса клиента в GigaChat (иначе используется дефолт gigachat-lite) |
 | `GIGACHAT_TIMEOUT` | `60` | Таймаут запроса в секундах |
 
 ## Использование с OpenAI SDK

@@ -11,6 +11,7 @@ services:
       GPT2GIGA_PORT: "8090"
       GPT2GIGA_MODE: "DEV"
       GPT2GIGA_LOG_LEVEL: "INFO"
+      GPT2GIGA_PASS_MODEL: "true"
 
       # GigaChat
       GIGACHAT_SCOPE: "GIGACHAT_API_PERS"

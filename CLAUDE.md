@@ -88,6 +88,7 @@ GitHub Container Registry требует аутентификацию даже �
 | `GPT2GIGA_HOST` | `0.0.0.0` | Внутри контейнера слушает все интерфейсы |
 | `GPT2GIGA_PORT` | `8090` | Порт |
 | `GPT2GIGA_MODE` | `DEV` | DEV включает /docs и log-эндпоинты |
+| `GPT2GIGA_PASS_MODEL` | `true` | Передавать модель из запроса клиента в GigaChat (иначе используется дефолт gigachat-lite) |
 
 ---
 
@@ -146,3 +147,4 @@ cd ~/gigachat-proxy && docker compose up -d --force-recreate
 | Скрипт зависает после баннера | `exec </dev/tty` прерывает чтение скрипта | Не использовать `exec`, только per-read |
 | `ghcr.io: denied` | GHCR требует auth в некоторых окружениях | Используем `gigateam/gpt2giga` (Docker Hub) |
 | SSL ошибки к GigaChat | Российские CA не в стандартном пуле | `GIGACHAT_VERIFY_SSL_CERTS=False` |
+| Всегда вызывается gigachat-lite | `pass_model=False` по умолчанию — модель из запроса игнорируется | `GPT2GIGA_PASS_MODEL=true` |
