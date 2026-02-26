@@ -169,6 +169,90 @@ show_zed() {
   divider
 }
 
+# ─── Aider ─────────────────────────────────
+show_aider() {
+  header "Aider"
+  echo -e "  Файл: ${BOLD}~/.aider.conf.yml${RESET}"
+  echo ""
+  divider
+  echo "openai-api-key: dummy"
+  echo "openai-api-base: http://127.0.0.1:8090"
+  echo "model: openai/GigaChat-2-Max"
+  divider
+}
+
+# ─── Claude Code ───────────────────────────
+show_claude_code() {
+  local shell_rc="$HOME/.zshrc"
+  [ -f "$HOME/.bashrc" ] && [ ! -f "$HOME/.zshrc" ] && shell_rc="$HOME/.bashrc"
+
+  header "Claude Code"
+  echo -e "  Добавьте в ${BOLD}${shell_rc}${RESET}:"
+  echo ""
+  divider
+  echo "export OPENAI_BASE_URL=http://127.0.0.1:8090"
+  echo "export OPENAI_API_KEY=dummy"
+  divider
+  echo ""
+  info "После добавления выполните: source ${shell_rc}"
+}
+
+# ─── OpenClaw ──────────────────────────────
+show_openclaw() {
+  local models="$1"
+  local cfg="$HOME/.openclaw/openclaw.json"
+  local auth="$HOME/.openclaw/agents/main/agent/auth-profiles.json"
+
+  header "OpenClaw"
+  echo -e "  Файл 1: ${BOLD}${cfg}${RESET}"
+  echo -e "  Добавьте в блок ${BOLD}models.providers${RESET}:"
+  echo ""
+  divider
+  echo '"gigachat": {'
+  echo '  "baseUrl": "http://127.0.0.1:8090",'
+  echo '  "api": "openai-completions",'
+  echo '  "models": ['
+  local first=true
+  for model_id in $models; do
+    local name ctx
+    name=$(get_model_name "$model_id")
+    ctx=$(get_context_window "$model_id")
+    [ "$first" = true ] || echo "    ,"
+    first=false
+    echo "    {"
+    echo "      \"id\": \"${model_id}\","
+    echo "      \"name\": \"${name}\","
+    echo "      \"input\": [\"text\"],"
+    echo "      \"cost\": {\"input\": 0, \"output\": 0, \"cacheRead\": 0, \"cacheWrite\": 0},"
+    echo "      \"contextWindow\": ${ctx},"
+    echo "      \"maxTokens\": ${ctx}"
+    echo "    }"
+  done
+  echo '  ]'
+  echo '}'
+  divider
+  echo ""
+  echo -e "  Добавьте в блок ${BOLD}auth.profiles${RESET} того же файла:"
+  echo ""
+  divider
+  echo '"gigachat:default": {'
+  echo '  "provider": "gigachat",'
+  echo '  "mode": "api_key"'
+  echo '}'
+  divider
+  echo ""
+  echo -e "  Файл 2: ${BOLD}${auth}${RESET}"
+  echo -e "  Добавьте в блок ${BOLD}profiles${RESET}:"
+  echo ""
+  divider
+  echo '"gigachat:default": {'
+  echo '  "type": "api_key",'
+  echo '  "provider": "gigachat",'
+  echo '  "key": "dummy"'
+  echo '}'
+  divider
+}
+
 # ─── Меню ──────────────────────────────────
 show_menu() {
   echo ""
@@ -207,11 +291,6 @@ dispatch() {
     esac
   done
 }
-
-# ─── Stubs (заменяются в Task 4) ────────────
-show_aider()      { echo "aider"; }
-show_claude_code(){ echo "claude"; }
-show_openclaw()   { echo "openclaw"; }
 
 # ─── MAIN ──────────────────────────────────
 echo -e "${BOLD}${CYAN}"
