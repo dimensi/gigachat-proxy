@@ -281,6 +281,7 @@ print_summary() {
 
 DOCKER_CMD="docker"
 COMPOSE_CMD="docker compose"
+SUDO_CMD="sudo"
 
 echo -e "${BOLD}${CYAN}"
 echo "  ██████╗ ██╗ ██████╗  █████╗  ██████╗██╗  ██╗ █████╗ ████████╗"
