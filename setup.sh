@@ -46,14 +46,16 @@ install_docker_macos() {
 
 install_docker_linux() {
   info "Устанавливаем Docker Engine (официальный скрипт)..."
-  curl -fsSL https://get.docker.com | sudo sh
-  sudo systemctl enable --now docker
-  # Добавляем пользователя в группу docker (без sudo для следующих команд)
-  sudo usermod -aG docker "$USER"
-  warn "Вы добавлены в группу 'docker'. Для применения без sudo нужно перелогиниться."
-  warn "Сейчас продолжаем с sudo..."
-  DOCKER_CMD="sudo docker"
-  COMPOSE_CMD="sudo docker compose"
+  curl -fsSL https://get.docker.com | ${SUDO_CMD} sh
+  ${SUDO_CMD} systemctl enable --now docker
+  if [ -n "${SUDO_CMD}" ]; then
+    # Добавляем пользователя в группу docker (только если не root)
+    ${SUDO_CMD} usermod -aG docker "$USER"
+    warn "Вы добавлены в группу 'docker'. Для применения без sudo нужно перелогиниться."
+    warn "Сейчас продолжаем с sudo..."
+    DOCKER_CMD="sudo docker"
+    COMPOSE_CMD="sudo docker compose"
+  fi
 }
 
 ensure_docker() {
