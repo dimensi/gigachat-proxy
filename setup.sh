@@ -324,6 +324,9 @@ print_summary() {
   echo -e "    base_url = http://127.0.0.1:8090"
   echo -e "    api_key  = dummy"
   echo ""
+  echo -e "  ${BOLD}Настройка Cursor, Raycast, Zed, Aider, Claude Code, OpenClaw:${RESET}"
+  echo -e "    curl -fsSL https://gigachat.dimensi.dev/configure.sh | bash"
+  echo ""
 }
 
 # ─── MAIN ─────────────────────────────────────

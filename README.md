@@ -31,6 +31,16 @@ curl -fsSL https://gigachat.dimensi.dev/setup.sh | bash
 
 Повторный запуск безопасен — скрипт предложит оставить существующий ключ и пересоздаст контейнер.
 
+## Настройка инструментов
+
+После установки прокси подключите его к вашему инструменту:
+
+```bash
+curl -fsSL https://gigachat.dimensi.dev/configure.sh | bash
+```
+
+Поддерживаются: Cursor, Raycast AI, Zed, Aider, Claude Code, OpenClaw.
+
 ## Требования
 
 - macOS или Ubuntu/Debian Linux
