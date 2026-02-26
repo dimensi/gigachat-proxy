@@ -1,91 +1,91 @@
 # GigaChat Proxy
 
-OpenAI-compatible proxy for [GigaChat](https://developers.sber.ru/gigachat) — Russian LLM by Sber.
+OpenAI-совместимый прокси для [GigaChat](https://developers.sber.ru/gigachat) — российской языковой модели от Сбера.
 
-Wraps [gpt2giga](https://github.com/ai-forever/gpt2giga) in a one-command setup that works on macOS and Linux.
+Оборачивает [gpt2giga](https://github.com/ai-forever/gpt2giga) в одну команду установки, которая работает на macOS и Linux.
 
-## What it does
+## Зачем это нужно
 
-Any tool or library that speaks **OpenAI API** (ChatGPT format) can talk to GigaChat without any code changes — just point it at `http://localhost:8090`.
+Любой инструмент или библиотека, которые умеют работать с **OpenAI API** (формат ChatGPT), будут работать с GigaChat без изменений в коде — достаточно указать `http://localhost:8090` в качестве адреса API.
 
 ```
-Your app  →  OpenAI API format  →  [this proxy]  →  GigaChat API
+Ваше приложение  →  OpenAI API  →  [этот прокси]  →  GigaChat API
 ```
 
-Works with: Raycast AI, Cursor, Aider, Claude Code, LangChain, OpenAI SDK, and anything else that supports a custom `base_url`.
+Работает с: Raycast AI, Cursor, Aider, Claude Code, LangChain, OpenAI SDK и любым другим инструментом с поддержкой кастомного `base_url`.
 
-## Quick start
+## Быстрый старт
 
 ```bash
 curl -fsSL https://dimensi.github.io/gigachat-proxy/setup.sh | bash
 ```
 
-The script will:
+Скрипт выполнит следующее:
 
-1. Check if Docker is installed — installs it if missing (Homebrew on macOS, `get.docker.com` on Linux)
-2. Wait for Docker daemon to be ready
-3. Ask for your GigaChat authorization key (hidden input)
-4. Create `~/gigachat-proxy/` with all config files
-5. Pull and start the proxy container
-6. Run a smoke test (health, models, chat, streaming)
+1. Проверит наличие Docker — установит, если не найден (Homebrew на macOS, `get.docker.com` на Linux)
+2. Дождётся запуска Docker daemon
+3. Запросит ключ авторизации GigaChat (ввод скрыт)
+4. Создаст директорию `~/gigachat-proxy/` со всеми конфигурационными файлами
+5. Скачает и запустит контейнер прокси
+6. Запустит smoke-тест (health, models, chat, streaming)
 
-Re-running the script is safe — it will offer to reuse the existing key and recreate the container.
+Повторный запуск безопасен — скрипт предложит оставить существующий ключ и пересоздаст контейнер.
 
-## Requirements
+## Требования
 
-- macOS or Ubuntu/Debian Linux
-- GigaChat authorization key — get one at [developers.sber.ru/studio](https://developers.sber.ru/studio)
-- Docker (installed automatically if missing)
-- Python 3 (for the smoke test, optional)
+- macOS или Ubuntu/Debian Linux
+- Ключ авторизации GigaChat — получить на [developers.sber.ru/studio](https://developers.sber.ru/studio)
+- Docker (устанавливается автоматически при отсутствии)
+- Python 3 (для smoke-теста, опционально)
 
-## Manual setup
+## Ручная установка
 
-If you prefer to configure manually:
+Если предпочитаете настроить вручную:
 
 ```bash
 git clone https://github.com/dimensi/gigachat-proxy
 cd gigachat-proxy
-cp .env.example .env          # fill in your key
+cp .env.example .env          # вставьте ваш ключ
 docker compose up -d
 python3 test.py
 ```
 
-## Configuration
+## Настройка
 
-Edit `~/gigachat-proxy/.env`:
+Редактировать `~/gigachat-proxy/.env`:
 
-| Variable | Description |
+| Переменная | Описание |
 |---|---|
-| `GIGACHAT_CREDENTIALS` | Your GigaChat authorization key |
+| `GIGACHAT_CREDENTIALS` | Ключ авторизации GigaChat |
 
-Edit `~/gigachat-proxy/docker-compose.yml` to change advanced settings:
+Редактировать `~/gigachat-proxy/docker-compose.yml` для расширенных настроек:
 
-| Variable | Default | Description |
+| Переменная | По умолчанию | Описание |
 |---|---|---|
-| `GIGACHAT_SCOPE` | `GIGACHAT_API_PERS` | API scope (`GIGACHAT_API_PERS` for personal, `GIGACHAT_API_CORP` for corporate) |
-| `GPT2GIGA_MODE` | `DEV` | `DEV` enables `/docs` and log endpoints; `PROD` disables them |
-| `GIGACHAT_TIMEOUT` | `60` | Request timeout in seconds |
+| `GIGACHAT_SCOPE` | `GIGACHAT_API_PERS` | Тип доступа (`GIGACHAT_API_PERS` — физлицо, `GIGACHAT_API_CORP` — юрлицо) |
+| `GPT2GIGA_MODE` | `DEV` | `DEV` включает `/docs` и эндпоинты логов; `PROD` отключает |
+| `GIGACHAT_TIMEOUT` | `60` | Таймаут запроса в секундах |
 
-## Using with OpenAI SDK
+## Использование с OpenAI SDK
 
 ```python
 from openai import OpenAI
 
 client = OpenAI(
     base_url="http://127.0.0.1:8090",
-    api_key="dummy",  # any value works
+    api_key="dummy",  # любое значение
 )
 
 response = client.chat.completions.create(
     model="GigaChat-2-Max",
-    messages=[{"role": "user", "content": "Hello!"}],
+    messages=[{"role": "user", "content": "Привет!"}],
 )
 print(response.choices[0].message.content)
 ```
 
-## Using with Raycast AI
+## Использование с Raycast AI
 
-Add to your Raycast AI provider config:
+Добавьте в конфиг провайдера Raycast AI:
 
 ```yaml
 - id: gigachat
@@ -105,37 +105,37 @@ Add to your Raycast AI provider config:
         tools: { supported: true }
 ```
 
-## Available models
+## Доступные модели
 
-| Model | Context |
+| Модель | Контекст |
 |---|---|
-| GigaChat-2-Max | 131 072 tokens |
-| GigaChat-2-Pro | 131 072 tokens |
-| GigaChat-2 | 131 072 tokens |
-| GigaChat-Max | 128 000 tokens |
-| GigaChat-Pro | 32 768 tokens |
+| GigaChat-2-Max | 131 072 токена |
+| GigaChat-2-Pro | 131 072 токена |
+| GigaChat-2 | 131 072 токена |
+| GigaChat-Max | 128 000 токенов |
+| GigaChat-Pro | 32 768 токенов |
 
-## Proxy endpoints
+## Эндпоинты прокси
 
-| Endpoint | Description |
+| Эндпоинт | Описание |
 |---|---|
-| `POST /v1/chat/completions` | Chat completions (streaming supported) |
-| `GET /v1/models` | List available models |
-| `POST /v1/embeddings` | Text embeddings |
-| `GET /health` | Health check |
-| `GET /docs` | Swagger UI (DEV mode) |
+| `POST /v1/chat/completions` | Генерация ответов (поддерживается стриминг) |
+| `GET /v1/models` | Список доступных моделей |
+| `POST /v1/embeddings` | Текстовые эмбеддинги |
+| `GET /health` | Проверка работоспособности |
+| `GET /docs` | Swagger UI (только в DEV-режиме) |
 
-## Managing the container
+## Управление контейнером
 
 ```bash
 cd ~/gigachat-proxy
 
-docker compose logs -f      # live logs
-docker compose down         # stop
-docker compose up -d        # start
-docker compose restart      # restart
+docker compose logs -f      # логи в реальном времени
+docker compose down         # остановить
+docker compose up -d        # запустить
+docker compose restart      # перезапустить
 ```
 
-## License
+## Лицензия
 
 MIT
