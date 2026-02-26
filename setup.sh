@@ -97,7 +97,7 @@ ask_credentials() {
     existing=$(grep "^GIGACHAT_CREDENTIALS=" "$INSTALL_DIR/.env" | cut -d= -f2- | tr -d '"')
     if [ -n "$existing" ] && [ "$existing" != "ВСТАВЬТЕ_ВАШ_КЛЮЧ_СЮДА" ]; then
       echo -e "Найден существующий ключ: ${CYAN}${existing:0:12}...${RESET}"
-      read -r -p "Оставить текущий ключ? [Y/n]: " keep
+      read -r -p "Оставить текущий ключ? [Y/n]: " keep </dev/tty
       if [[ "${keep:-Y}" =~ ^[Yy]$ ]]; then
         GIGACHAT_CREDENTIALS="$existing"
         return
@@ -106,7 +106,7 @@ ask_credentials() {
   fi
 
   while true; do
-    read -r -s -p "Вставьте ключ авторизации (ввод скрыт): " GIGACHAT_CREDENTIALS
+    read -r -s -p "Вставьте ключ авторизации (ввод скрыт): " GIGACHAT_CREDENTIALS </dev/tty
     echo ""
     if [ -z "$GIGACHAT_CREDENTIALS" ]; then
       warn "Ключ не может быть пустым. Попробуйте ещё раз."
@@ -277,6 +277,16 @@ print_summary() {
 }
 
 # ─── MAIN ─────────────────────────────────────
+
+# Переподключаем stdin к терминалу — иначе read читает из pipe при curl | bash
+if [ -t 0 ]; then
+  : # stdin уже терминал (запуск из файла)
+elif [ -e /dev/tty ]; then
+  exec </dev/tty
+else
+  err "Запустите скрипт так: bash <(curl -fsSL https://gigachat.dimensi.dev/setup.sh)"
+fi
+
 DOCKER_CMD="docker"
 COMPOSE_CMD="docker compose"
 
