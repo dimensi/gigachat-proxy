@@ -77,7 +77,7 @@ ensure_deps() {
   fi
 }
 
-# ─── 2. Установка Docker ─────────────────────
+# ─── 3. Установка Docker ─────────────────────
 install_docker_macos() {
   if command -v brew &>/dev/null; then
     info "Устанавливаем Docker Desktop через Homebrew..."
@@ -135,7 +135,7 @@ ensure_docker() {
   ok "Docker daemon запущен"
 }
 
-# ─── 3. Ключ авторизации ─────────────────────
+# ─── 4. Ключ авторизации ─────────────────────
 ask_credentials() {
   header "Ключ авторизации GigaChat"
   echo "Получить ключ: https://developers.sber.ru/studio/"
@@ -167,7 +167,7 @@ ask_credentials() {
   done
 }
 
-# ─── 4. Создаём файлы ────────────────────────
+# ─── 5. Создаём файлы ────────────────────────
 write_files() {
   header "Создание файлов в $INSTALL_DIR"
   mkdir -p "$INSTALL_DIR"
@@ -270,7 +270,7 @@ PYEOF
   ok "test.py"
 }
 
-# ─── 5. Запуск контейнера ────────────────────
+# ─── 6. Запуск контейнера ────────────────────
 start_proxy() {
   header "Запуск прокси"
   cd "$INSTALL_DIR"
@@ -298,7 +298,7 @@ start_proxy() {
   ok "Прокси запущен на http://127.0.0.1:8090"
 }
 
-# ─── 6. Тест ─────────────────────────────────
+# ─── 7. Тест ─────────────────────────────────
 run_tests() {
   header "Тестирование API"
   if command -v python3 &>/dev/null; then
@@ -344,6 +344,7 @@ echo -e "${RESET}"
 echo -e "  ${BOLD}OpenAI-совместимый прокси для GigaChat${RESET}"
 echo ""
 
+ensure_deps
 ensure_docker
 ask_credentials
 write_files
