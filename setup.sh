@@ -29,6 +29,54 @@ detect_os() {
   esac
 }
 
+# ─── 2. Проверка зависимостей ─────────────────
+ensure_deps() {
+  header "Проверка зависимостей"
+
+  # sudo или root?
+  if [ "$(id -u)" -eq 0 ]; then
+    SUDO_CMD=""
+    ok "Запущено от root (sudo не нужен)"
+  else
+    if ! command -v sudo &>/dev/null; then
+      err "sudo не найден. Установите sudo или запустите скрипт от имени root."
+    fi
+    SUDO_CMD="sudo"
+    ok "sudo доступен"
+  fi
+
+  # curl
+  if ! command -v curl &>/dev/null; then
+    warn "curl не найден. Устанавливаем..."
+    local os
+    os=$(detect_os)
+    case "$os" in
+      macos)
+        err "curl отсутствует на macOS. Установите через Homebrew: brew install curl"
+        ;;
+      debian)
+        ${SUDO_CMD} apt-get update -qq
+        ${SUDO_CMD} apt-get install -y curl
+        ;;
+      rhel)
+        if command -v dnf &>/dev/null; then
+          ${SUDO_CMD} dnf install -y curl
+        else
+          ${SUDO_CMD} yum install -y curl
+        fi
+        ;;
+    esac
+    ok "curl установлен: $(curl --version | head -1 | cut -d' ' -f1-2)"
+  else
+    ok "curl: $(curl --version | head -1 | cut -d' ' -f1-2)"
+  fi
+
+  # systemctl (только Linux)
+  if [ "$(uname -s)" = "Linux" ] && ! command -v systemctl &>/dev/null; then
+    warn "systemctl не найден. Docker daemon нужно будет запустить вручную после установки."
+  fi
+}
+
 # ─── 2. Установка Docker ─────────────────────
 install_docker_macos() {
   if command -v brew &>/dev/null; then
