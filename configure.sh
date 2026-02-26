@@ -78,6 +78,97 @@ get_context_window() {
   esac
 }
 
+# ─── Cursor ────────────────────────────────
+show_cursor() {
+  local settings_file
+  if [ "$(uname -s)" = "Darwin" ]; then
+    settings_file="$HOME/Library/Application Support/Cursor/User/settings.json"
+  else
+    settings_file="$HOME/.config/Cursor/User/settings.json"
+  fi
+
+  header "Cursor"
+  echo -e "  Откройте Settings > AI в Cursor или отредактируйте:"
+  echo -e "  ${BOLD}${settings_file}${RESET}"
+  echo ""
+  divider
+  cat <<'EOF'
+  "openai.apiKey": "dummy",
+  "openai.baseUrl": "http://127.0.0.1:8090"
+EOF
+  divider
+}
+
+# ─── Raycast AI ────────────────────────────
+show_raycast() {
+  local models="$1"
+  local file="$HOME/Library/Application Support/com.raycast.macos/customAIProviders.yaml"
+
+  header "Raycast AI"
+  echo -e "  Файл: ${BOLD}${file}${RESET}"
+  echo ""
+  divider
+  echo "- id: gigachat"
+  echo "  name: GigaChat"
+  echo "  base_url: http://127.0.0.1:8090"
+  echo "  api_keys:"
+  echo "    gigachat: dummy"
+  echo "  models:"
+  for model_id in $models; do
+    local name ctx
+    name=$(get_model_name "$model_id")
+    ctx=$(get_context_window "$model_id")
+    echo "    - id: ${model_id}"
+    echo "      name: ${name}"
+    echo "      provider: gigachat"
+    echo "      context: ${ctx}"
+    echo "      abilities:"
+    echo "        temperature:"
+    echo "          supported: true"
+    echo "        vision:"
+    echo "          supported: true"
+    echo "        system_message:"
+    echo "          supported: true"
+    echo "        tools:"
+    echo "          supported: true"
+    echo "        reasoning_effort:"
+    echo "          supported: false"
+  done
+  divider
+}
+
+# ─── Zed ───────────────────────────────────
+show_zed() {
+  local models="$1"
+  local file="$HOME/.config/zed/settings.json"
+
+  header "Zed"
+  echo -e "  Файл: ${BOLD}${file}${RESET}"
+  echo ""
+  divider
+  echo '"language_models": {'
+  echo '  "openai": {'
+  echo '    "api_url": "http://127.0.0.1:8090",'
+  echo '    "available_models": ['
+  local first=true
+  for model_id in $models; do
+    local name ctx
+    name=$(get_model_name "$model_id")
+    ctx=$(get_context_window "$model_id")
+    [ "$first" = true ] || echo "      ,"
+    first=false
+    echo "      {"
+    echo "        \"name\": \"${model_id}\","
+    echo "        \"display_name\": \"${name}\","
+    echo "        \"max_tokens\": ${ctx}"
+    echo "      }"
+  done
+  echo '    ]'
+  echo '  }'
+  echo '}'
+  divider
+}
+
 # ─── Меню ──────────────────────────────────
 show_menu() {
   echo ""
@@ -117,10 +208,7 @@ dispatch() {
   done
 }
 
-# ─── Stubs (заменяются в Task 3–4) ──────────
-show_cursor()     { echo "cursor"; }
-show_raycast()    { echo "raycast"; }
-show_zed()        { echo "zed"; }
+# ─── Stubs (заменяются в Task 4) ────────────
 show_aider()      { echo "aider"; }
 show_claude_code(){ echo "claude"; }
 show_openclaw()   { echo "openclaw"; }
